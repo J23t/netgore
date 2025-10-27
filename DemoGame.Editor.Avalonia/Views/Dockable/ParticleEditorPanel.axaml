@@ -1,0 +1,169 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.ParticleEditorPanel"
+             x:DataType="vm:ParticleEditorViewModel">
+    
+    <Design.DataContext>
+        <vm:ParticleEditorViewModel />
+    </Design.DataContext>
+
+    <!-- Particle Editor - Edit particle effects -->
+    <Border Background="#252526">
+        <DockPanel>
+            <!-- Top toolbar -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,0,0,1"
+                    Padding="8">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <Button Content="➕ New" Command="{Binding NewEmitterCommand}" Padding="8,4" />
+                    <Button Content="🗑 Delete" Command="{Binding DeleteEmitterCommand}" Padding="8,4" />
+                    <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                    <Button Content="▶ Play" Command="{Binding PlayEmitterCommand}" Padding="8,4" />
+                    <Button Content="■ Stop" Command="{Binding StopEmitterCommand}" Padding="8,4" />
+                    <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                    <Button Content="💾 Save" Command="{Binding SaveEmitterCommand}" Padding="8,4" />
+                </StackPanel>
+            </Border>
+
+            <!-- Bottom status bar -->
+            <Border DockPanel.Dock="Bottom" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,1,0,0"
+                    Padding="8,4">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left"
+                               Text="{Binding StatusText}" 
+                               Foreground="#9CDCFE"
+                               FontSize="11" />
+                    <TextBlock DockPanel.Dock="Right"
+                               Text="{Binding IsPlaying, StringFormat='Status: {0}'}"
+                               Foreground="Gray"
+                               FontSize="11"
+                               HorizontalAlignment="Right" />
+                </DockPanel>
+            </Border>
+
+            <!-- Main content -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="250" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Emitter list -->
+                <Border Grid.Column="0" Background="#1E1E1E" Padding="8">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" 
+                                   Text="Particle Emitters" 
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Margin="0,0,0,8" />
+                        <ListBox ItemsSource="{Binding Emitters}"
+                                 SelectedItem="{Binding SelectedEmitter}"
+                                 Background="#252526">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}" Foreground="White" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </Border>
+
+                <GridSplitter Grid.Column="1" Background="#3F3F46" ResizeDirection="Columns" />
+
+                <!-- Preview area -->
+                <Border Grid.Column="2" Background="#1E1E1E" Padding="8">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top"
+                                   Text="Preview" 
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Margin="0,0,0,8" />
+                        <Border Background="#252526" 
+                                BorderBrush="#3F3F46" 
+                                BorderThickness="1">
+                            <StackPanel HorizontalAlignment="Center" 
+                                        VerticalAlignment="Center"
+                                        Spacing="8">
+                                <TextBlock Text="🎆" 
+                                           FontSize="48"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="Particle Preview" 
+                                           Foreground="White"
+                                           HorizontalAlignment="Center" />
+                                <TextBlock Text="[Rendering implementation pending]"
+                                           Foreground="Gray"
+                                           FontStyle="Italic"
+                                           FontSize="10"
+                                           HorizontalAlignment="Center" />
+                            </StackPanel>
+                        </Border>
+                    </DockPanel>
+                </Border>
+
+                <GridSplitter Grid.Column="3" Background="#3F3F46" ResizeDirection="Columns" />
+
+                <!-- Properties -->
+                <Border Grid.Column="4" Background="#1E1E1E" Padding="8">
+                    <ScrollViewer>
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Emitter Properties" 
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="White" />
+
+                            <StackPanel Spacing="8" IsVisible="{Binding SelectedEmitter, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <!-- Name -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Name" Foreground="Gray" FontSize="11" />
+                                    <TextBox Text="{Binding SelectedEmitter.Name}" />
+                                </StackPanel>
+
+                                <!-- Particle Count -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Particle Count" Foreground="Gray" FontSize="11" />
+                                    <NumericUpDown Value="{Binding SelectedEmitter.ParticleCount}" 
+                                                   Minimum="1" 
+                                                   Maximum="1000" />
+                                </StackPanel>
+
+                                <!-- Texture -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Texture" Foreground="Gray" FontSize="11" />
+                                    <TextBox Text="{Binding SelectedEmitter.TextureName}" />
+                                </StackPanel>
+
+                                <Border Background="#252526" 
+                                        BorderBrush="#3F3F46" 
+                                        BorderThickness="1"
+                                        Padding="8"
+                                        Margin="0,12,0,0">
+                                    <TextBlock Text="💡 More properties will be added as we integrate with the actual particle system"
+                                               Foreground="Gray"
+                                               FontSize="10"
+                                               FontStyle="Italic"
+                                               TextWrapping="Wrap" />
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock Text="No emitter selected"
+                                       Foreground="Gray"
+                                       FontStyle="Italic"
+                                       IsVisible="{Binding SelectedEmitter, Converter={x:Static ObjectConverters.IsNull}}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

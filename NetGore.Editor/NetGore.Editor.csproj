@@ -1,0 +1,47 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>NetGore.Editor</AssemblyName>
+    <RootNamespace>NetGore.Editor</RootNamespace>
+    <OutputPath>../bin/</OutputPath>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>TRACE;DEBUG;TOPDOWN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Lidgren.Network">
+      <HintPath>../Externals/Lidgren.Network.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>../Externals/log4net.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>../Externals/WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../NetGore/NetGore.csproj" />
+    <ProjectReference Include="../NetGore.Db/NetGore.Db.csproj" />
+    <ProjectReference Include="../NetGore.Features/NetGore.Features.csproj" />
+  </ItemGroup>
+
+</Project>

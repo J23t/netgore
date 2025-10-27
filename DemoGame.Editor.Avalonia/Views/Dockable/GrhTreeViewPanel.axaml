@@ -1,0 +1,120 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.GrhTreeViewPanel"
+             x:DataType="vm:GrhTreeViewViewModel">
+    
+    <Design.DataContext>
+        <vm:GrhTreeViewViewModel />
+    </Design.DataContext>
+
+    <!-- GRH Tree View - Browse and select graphics -->
+    <Border Background="#252526">
+        <DockPanel>
+            <!-- Top toolbar -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,0,0,1"
+                    Padding="8">
+                <DockPanel>
+                    <!-- Filter textbox -->
+                    <TextBlock DockPanel.Dock="Left" 
+                               Text="Filter:" 
+                               VerticalAlignment="Center"
+                               Foreground="White"
+                               Margin="0,0,8,0" />
+                    <TextBox Text="{Binding FilterText}" 
+                             Watermark="Search GRH..."
+                             Width="200"
+                             DockPanel.Dock="Left"
+                             Margin="0,0,8,0" />
+                    
+                    <!-- Action buttons -->
+                    <StackPanel Orientation="Horizontal" Spacing="4" DockPanel.Dock="Right">
+                        <Button Content="➕ New" Command="{Binding NewGrhCommand}" Padding="8,4" />
+                        <Button Content="✏️ Edit" Command="{Binding EditGrhCommand}" Padding="8,4" />
+                        <Button Content="🗑 Delete" Command="{Binding DeleteGrhCommand}" Padding="8,4" />
+                        <Button Content="🔄 Refresh" Command="{Binding RefreshCommand}" Padding="8,4" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Bottom status bar -->
+            <Border DockPanel.Dock="Bottom" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,1,0,0"
+                    Padding="8,4">
+                <TextBlock Text="{Binding StatusText}" 
+                           Foreground="#9CDCFE"
+                           FontSize="11" />
+            </Border>
+
+            <!-- Main content: Tree view -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="200" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Tree view -->
+                <TreeView Grid.Column="0"
+                          ItemsSource="{Binding RootNodes}"
+                          Background="#1E1E1E"
+                          Padding="8">
+                    <TreeView.DataTemplates>
+                        <TreeDataTemplate DataType="vm:GrhTreeNode" ItemsSource="{Binding Children}">
+                            <TextBlock Text="{Binding Name}" Foreground="White" />
+                        </TreeDataTemplate>
+                    </TreeView.DataTemplates>
+                </TreeView>
+
+                <!-- Splitter -->
+                <GridSplitter Grid.Column="1" 
+                              Background="#3F3F46"
+                              ResizeDirection="Columns" />
+
+                <!-- Preview panel -->
+                <Border Grid.Column="2" Background="#252526" Padding="8">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="GRH Preview" 
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White" />
+                        
+                        <Border Background="#1E1E1E" 
+                                BorderBrush="#3F3F46" 
+                                BorderThickness="1"
+                                MinHeight="150"
+                                Padding="8">
+                            <StackPanel Spacing="6" IsVisible="{Binding SelectedGrhData, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <TextBlock Text="{Binding SelectedGrhData.GrhIndex, StringFormat='ID: {0}'}" 
+                                           Foreground="#9CDCFE"
+                                           FontSize="11" />
+                                <TextBlock Text="{Binding SelectedGrhData.Categorization}" 
+                                           Foreground="White"
+                                           FontSize="11"
+                                           TextWrapping="Wrap" />
+                                <TextBlock Text="[Preview rendering coming soon]"
+                                           Foreground="Gray"
+                                           FontStyle="Italic"
+                                           FontSize="10"
+                                           Margin="0,10,0,0" />
+                            </StackPanel>
+                        </Border>
+
+                        <TextBlock Text="💡 Select a GRH from the tree to preview"
+                                   FontSize="10"
+                                   Foreground="Gray"
+                                   FontStyle="Italic"
+                                   TextWrapping="Wrap"
+                                   IsVisible="{Binding SelectedGrhData, Converter={x:Static ObjectConverters.IsNull}}" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>
+

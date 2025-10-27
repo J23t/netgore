@@ -1,0 +1,38 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>DemoGame.GUITester</AssemblyName>
+    <RootNamespace>DemoGame.GUITester</RootNamespace>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <OutputPath>../DemoGame.Client/bin/</OutputPath>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>TRACE;DEBUG;TOPDOWN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Lidgren.Network">
+      <HintPath>../Externals/Lidgren.Network.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>../Externals/log4net.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../NetGore/NetGore.csproj" />
+    <ProjectReference Include="../NetGore.Features.Client/NetGore.Features.Client.csproj" />
+    <ProjectReference Include="../DemoGame/DemoGame.csproj" />
+    <ProjectReference Include="../DemoGame.Client/DemoGame.Client.csproj" />
+  </ItemGroup>
+
+</Project>

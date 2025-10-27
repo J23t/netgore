@@ -1,0 +1,136 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.PropertiesPanel"
+             x:DataType="vm:PropertiesViewModel">
+    
+    <Design.DataContext>
+        <vm:PropertiesViewModel />
+    </Design.DataContext>
+
+    <!-- Properties Panel - shows details of selected object -->
+    <Border Background="#252526">
+        <DockPanel>
+            <!-- Header showing selected object type -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,0,0,1"
+                    Padding="10,8">
+                <TextBlock Text="{Binding SelectedObjectType}" 
+                           Foreground="#9CDCFE"
+                           FontSize="13"
+                           FontWeight="SemiBold" />
+            </Border>
+
+            <!-- Properties display area -->
+            <ScrollViewer>
+                <StackPanel Margin="10" Spacing="12">
+                    
+                    <!-- When object is selected -->
+                    <StackPanel Spacing="10" IsVisible="{Binding SelectedObject, Converter={x:Static ObjectConverters.IsNotNull}}">
+                        <TextBlock Text="Object Properties" 
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White" />
+                        
+                        <!-- Property list with editable support -->
+                        <Border BorderBrush="#3F3F46" 
+                                BorderThickness="1"
+                                Background="#1E1E1E"
+                                MaxHeight="600">
+                            <ScrollViewer>
+                                <ItemsControl ItemsSource="{Binding Properties}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Border BorderBrush="#3F3F46"
+                                                    BorderThickness="0,0,0,1"
+                                                    Padding="8,6">
+                                                <Grid>
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="150" />
+                                                        <ColumnDefinition Width="*" />
+                                                    </Grid.ColumnDefinitions>
+                                                    
+                                                    <!-- Property Name -->
+                                                    <TextBlock Grid.Column="0"
+                                                               Text="{Binding Name}"
+                                                               Foreground="#9CDCFE"
+                                                               FontWeight="Bold"
+                                                               VerticalAlignment="Center"
+                                                               Margin="0,0,12,0" />
+                                                    
+                                                    <!-- Editable TextBox for strings/numbers -->
+                                                    <TextBox Grid.Column="1"
+                                                             Text="{Binding Value, Mode=TwoWay}"
+                                                             Foreground="White"
+                                                             Background="#1E1E1E"
+                                                             BorderThickness="0"
+                                                             IsVisible="{Binding IsEditable}"
+                                                             VerticalAlignment="Center"
+                                                             Padding="4,2" />
+                                                    
+                                                    <!-- Read-only display for non-editable -->
+                                                    <TextBlock Grid.Column="1"
+                                                               Text="{Binding Value}"
+                                                               Foreground="White"
+                                                               TextWrapping="Wrap"
+                                                               VerticalAlignment="Center"
+                                                               IsVisible="{Binding !IsEditable}" />
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </Border>
+
+                        <Border Background="#1E1E1E"
+                                BorderBrush="#3F3F46"
+                                BorderThickness="1"
+                                Padding="8"
+                                Margin="0,8,0,0">
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="✅ Property Editing: ENABLED!"
+                                           FontSize="10"
+                                           Foreground="LightGreen"
+                                           FontWeight="Bold" />
+                                <TextBlock Text="• Editable properties have text boxes"
+                                           FontSize="9"
+                                           Foreground="Gray" />
+                                <TextBlock Text="• Read-only properties are grayed out"
+                                           FontSize="9"
+                                           Foreground="Gray" />
+                                <TextBlock Text="• Changes apply immediately"
+                                           FontSize="9"
+                                           Foreground="Gray" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+
+                    <!-- When nothing selected -->
+                    <StackPanel Spacing="10" 
+                                VerticalAlignment="Center"
+                                Margin="0,40,0,0"
+                                IsVisible="{Binding SelectedObject, Converter={x:Static ObjectConverters.IsNull}}">
+                        <TextBlock Text="No object selected" 
+                                   Foreground="Gray"
+                                   FontSize="14"
+                                   HorizontalAlignment="Center"
+                                   FontStyle="Italic" />
+                        
+                        <TextBlock Text="Select an object in the editor to view its properties"
+                                   Foreground="Gray"
+                                   FontSize="11"
+                                   HorizontalAlignment="Center"
+                                   TextAlignment="Center"
+                                   TextWrapping="Wrap"
+                                   MaxWidth="200" />
+                    </StackPanel>
+
+                </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
+    </Border>
+</UserControl>
+

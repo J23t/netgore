@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>NetGore.Features.Server</AssemblyName>
+    <RootNamespace>NetGore.Features.Server</RootNamespace>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <OutputPath>../bin/</OutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Lidgren.Network"><HintPath>../Externals/Lidgren.Network.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="log4net"><HintPath>../Externals/log4net.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../NetGore/NetGore.csproj" />
+    <ProjectReference Include="../NetGore.Db/NetGore.Db.csproj" />
+    <ProjectReference Include="../NetGore.Features/NetGore.Features.csproj" />
+  </ItemGroup>
+</Project>

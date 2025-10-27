@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Library</OutputType>
+    <AssemblyName>DemoGame</AssemblyName>
+    <RootNamespace>DemoGame</RootNamespace>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <OutputPath>../bin/</OutputPath>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>TRACE;DEBUG;TOPDOWN</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <DefineConstants>TRACE;TOPDOWN</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Lidgren.Network"><HintPath>../Externals/Lidgren.Network.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="log4net"><HintPath>../Externals/log4net.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../NetGore/NetGore.csproj" />
+    <ProjectReference Include="../NetGore.Db/NetGore.Db.csproj" />
+    <ProjectReference Include="../NetGore.Features/NetGore.Features.csproj" />
+  </ItemGroup>
+</Project>

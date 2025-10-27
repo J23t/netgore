@@ -1,0 +1,53 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>DemoGame.Client</AssemblyName>
+    <RootNamespace>DemoGame.Client</RootNamespace>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <OutputPath>bin/</OutputPath>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>TRACE;DEBUG;TOPDOWN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Lidgren.Network">
+      <HintPath>../Externals/Lidgren.Network.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>../Externals/log4net.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../NetGore/NetGore.csproj" />
+    <ProjectReference Include="../NetGore.Features.Client/NetGore.Features.Client.csproj" />
+    <ProjectReference Include="../DemoGame/DemoGame.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Exclude Windows Forms files on Linux -->
+    <Compile Remove="GameForm.cs" />
+    <Compile Remove="GameForm.Designer.cs" />
+  </ItemGroup>
+
+  <!-- PreBuild content copy - Windows -->
+  <Target Name="PreBuildWindows" BeforeTargets="PreBuildEvent" Condition="'$(OS)' == 'Windows_NT'">
+    <Exec Command="&quot;$(MSBuildThisFileDirectory)../DevContent/CopyContent.exe&quot; &quot;$(MSBuildThisFileDirectory)../DevContent&quot; &quot;$(TargetDir)Content&quot; --clean=&quot;[Engine,Font,Fx,Grh,Languages,Maps,Music,Skeletons,Sounds]&quot;" />
+  </Target>
+
+  <!-- PreBuild content copy - Linux/Unix -->
+  <Target Name="PreBuildUnix" BeforeTargets="PreBuildEvent" Condition="'$(OS)' != 'Windows_NT'">
+    <Exec Command="bash &quot;$(MSBuildThisFileDirectory)../DevContent/CopyContent.sh&quot; &quot;$(MSBuildThisFileDirectory)../DevContent&quot; &quot;$(TargetDir)Content&quot; --clean=&quot;[Engine,Font,Fx,Grh,Languages,Maps,Music,Skeletons,Sounds]&quot;" />
+  </Target>
+
+</Project>

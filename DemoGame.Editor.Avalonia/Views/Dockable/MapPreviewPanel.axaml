@@ -1,0 +1,46 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.MapPreviewPanel"
+             x:DataType="vm:MapPreviewViewModel">
+    
+    <Design.DataContext>
+        <vm:MapPreviewViewModel />
+    </Design.DataContext>
+
+    <!-- Map preview panel - will show rendered map -->
+    <Border Background="#1E1E1E" Padding="20">
+        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" Spacing="10">
+            <TextBlock Text="🗺️ Map Preview" 
+                       FontSize="20" 
+                       FontWeight="Bold"
+                       Foreground="White"
+                       HorizontalAlignment="Center" />
+            
+            <TextBlock Text="{Binding StatusMessage}"
+                       FontSize="14"
+                       Foreground="#9CDCFE"
+                       HorizontalAlignment="Center"
+                       TextWrapping="Wrap"
+                       TextAlignment="Center" />
+            
+            <Border Width="400" Height="300" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="2"
+                    Background="#252526">
+                <TextBlock Text="Map rendering area (SFML/Skia integration coming soon)"
+                           HorizontalAlignment="Center"
+                           VerticalAlignment="Center"
+                           Foreground="Gray"
+                           TextAlignment="Center"
+                           TextWrapping="Wrap" />
+            </Border>
+            
+            <TextBlock Text="✅ Panel migrated - rendering will be added in Phase 3"
+                       FontSize="11"
+                       Foreground="Gray"
+                       HorizontalAlignment="Center" />
+        </StackPanel>
+    </Border>
+</UserControl>
+

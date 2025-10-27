@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <AssemblyName>DemoGame.Server</AssemblyName>
+    <RootNamespace>DemoGame.Server</RootNamespace>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <OutputPath>bin/</OutputPath>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>TRACE;DEBUG;TOPDOWN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Lidgren.Network">
+      <HintPath>../Externals/Lidgren.Network.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>../Externals/log4net.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MySqlConnector" Version="2.3.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../NetGore/NetGore.csproj" />
+    <ProjectReference Include="../NetGore.Db/NetGore.Db.csproj" />
+    <ProjectReference Include="../NetGore.Features/NetGore.Features.csproj" />
+    <ProjectReference Include="../NetGore.Features.Server/NetGore.Features.Server.csproj" />
+    <ProjectReference Include="../DemoGame/DemoGame.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Exclude Windows Forms files and editor components on Linux -->
+    <Compile Remove="UI/WinForms/**/*.cs" />
+    <Compile Remove="Program.WinForms.cs" Condition="Exists('Program.WinForms.cs')" />
+    <Compile Remove="World/Map/MapSpawn/MapSpawnRectEditor.cs" />
+  </ItemGroup>
+
+</Project>

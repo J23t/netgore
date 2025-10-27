@@ -1,0 +1,79 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             mc:Ignorable="d" d:DesignWidth="300" d:DesignHeight="450"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.SelectedMapObjectsPanel"
+             x:DataType="vm:SelectedMapObjectsViewModel">
+    
+    <Design.DataContext>
+        <vm:SelectedMapObjectsViewModel />
+    </Design.DataContext>
+
+    <!-- Main layout: List (top) and Properties (bottom) - split when multiple items -->
+    <Grid RowDefinitions="Auto,*">
+        
+        <!-- List of selected objects (shown when multiple items selected) -->
+        <Border Grid.Row="0" 
+                Background="#252526" 
+                BorderBrush="#3F3F46" 
+                BorderThickness="0,0,0,1"
+                IsVisible="{Binding HasMultipleSelection}">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Top"
+                           Text="Multiple Objects Selected"
+                           FontSize="12"
+                           FontWeight="Bold"
+                           Foreground="#9CDCFE"
+                           Padding="5"
+                           Background="#1E1E1E" />
+                
+                <ListBox ItemsSource="{Binding SelectedObjects}"
+                         SelectedItem="{Binding SelectedItem}"
+                         Background="#1E1E1E"
+                         Foreground="White"
+                         MaxHeight="150">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </DockPanel>
+        </Border>
+
+        <!-- Properties view -->
+        <Border Grid.Row="1" Background="#252526" Padding="10">
+            <ScrollViewer>
+                <StackPanel Spacing="10">
+                    <!-- When no selection -->
+                    <TextBlock Text="No objects selected"
+                               Foreground="#808080"
+                               FontStyle="Italic"
+                               IsVisible="{Binding !SelectedObjects.Count}" />
+
+                    <!-- When single selection -->
+                    <StackPanel Spacing="10" 
+                                IsVisible="{Binding SelectedObjects.Count}">
+                        <TextBlock Text="Selected Object Properties" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                   Foreground="White" />
+                        
+                        <TextBlock Text="{Binding SelectedItem}" 
+                                   Foreground="White"
+                                   TextWrapping="Wrap" />
+
+                        <TextBlock Text="💡 Full PropertyGrid integration coming soon!" 
+                                   Foreground="#808080" 
+                                   FontSize="11"
+                                   TextWrapping="Wrap"
+                                   Margin="0,10,0,0" />
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+    </Grid>
+</UserControl>
+

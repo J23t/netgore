@@ -1,0 +1,96 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.SoundEditorPanel"
+             x:DataType="vm:SoundEditorViewModel">
+    
+    <Design.DataContext>
+        <vm:SoundEditorViewModel />
+    </Design.DataContext>
+
+    <!-- Main layout: Top area (list + properties), Bottom area (buttons) -->
+    <Grid RowDefinitions="*,Auto">
+        
+        <!-- Top: Split view with sound list (left) and properties (right) -->
+        <Grid Grid.Row="0" ColumnDefinitions="200,5,*">
+            
+            <!-- Left: Sound List -->
+            <Border Grid.Column="0" BorderBrush="#3F3F46" BorderThickness="0,0,1,0">
+                <ListBox ItemsSource="{Binding SoundItems}"
+                         SelectedItem="{Binding SelectedSound}"
+                         Background="#1E1E1E"
+                         Foreground="White">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}" />
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Border>
+
+            <!-- GridSplitter between list and properties -->
+            <GridSplitter Grid.Column="1" 
+                          Width="5" 
+                          ResizeDirection="Columns"
+                          Background="#3F3F46" />
+
+            <!-- Right: Properties (simple view for now, can add PropertyGrid later) -->
+            <Border Grid.Column="2" Background="#252526" Padding="10">
+                <ScrollViewer>
+                    <StackPanel Spacing="10" IsVisible="{Binding SelectedSound, Converter={x:Static ObjectConverters.IsNotNull}}">
+                        <TextBlock Text="Sound Properties" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                   Foreground="White" />
+                        
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="ID:" Foreground="#9CDCFE" FontSize="12" />
+                            <TextBlock Text="{Binding SelectedSound.ID}" 
+                                       Foreground="White" 
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Name:" Foreground="#9CDCFE" FontSize="12" />
+                            <TextBlock Text="{Binding SelectedSound.Name}" 
+                                       Foreground="White" 
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- Bottom: Play/Stop buttons -->
+        <Border Grid.Row="1" 
+                Background="#2D2D30" 
+                BorderBrush="#3F3F46" 
+                BorderThickness="0,1,0,0"
+                Padding="10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Command="{Binding PlaySoundCommand}"
+                        Content="▶ Play"
+                        Width="80"
+                        Height="32"
+                        ToolTip.Tip="Play selected sound" />
+                
+                <Button Command="{Binding StopSoundCommand}"
+                        Content="■ Stop"
+                        Width="80"
+                        Height="32"
+                        ToolTip.Tip="Stop playing sound" />
+
+                <TextBlock Text="{Binding SelectedSound.Name, StringFormat='Selected: {0}'}"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           Margin="20,0,0,0"
+                           IsVisible="{Binding SelectedSound, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
+

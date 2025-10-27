@@ -1,0 +1,165 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels"
+        xmlns:dock="using:Dock.Avalonia.Controls"
+        xmlns:dockModel="using:Dock.Model.Mvvm.Controls"
+        xmlns:dockable="using:DemoGame.Editor.Avalonia.Views.Dockable"
+        xmlns:converters="using:DemoGame.Editor.Avalonia.Converters"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1200" d:DesignHeight="800"
+        x:Class="DemoGame.Editor.Avalonia.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="NetGore Editor (Avalonia) - Cross-Platform"
+        Width="1200" Height="800">
+
+    <Design.DataContext>
+        <!-- Design-time ViewModel for preview in designer -->
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
+    <Window.Resources>
+        <converters:DockViewConverter x:Key="DockViewConverter" />
+    </Window.Resources>
+    
+    <Window.DataTemplates>
+        <!-- This tells Dock.Avalonia to create views on-demand using DockViewFactory -->
+        <DataTemplate DataType="dockModel:Tool">
+            <ContentControl Content="{Binding Id, Converter={StaticResource DockViewConverter}}" />
+        </DataTemplate>
+        
+        <DataTemplate DataType="dockModel:Document">
+            <ContentControl Content="{Binding Id, Converter={StaticResource DockViewConverter}}" />
+        </DataTemplate>
+    </Window.DataTemplates>
+
+    <DockPanel>
+        <!-- Menu Bar (top) with keyboard shortcuts -->
+        <Menu DockPanel.Dock="Top">
+            <MenuItem Header="_File">
+                <MenuItem Header="_New Map..." 
+                          Command="{Binding NewMapCommand}"
+                          InputGesture="Ctrl+N">
+                    <MenuItem.Icon>
+                        <TextBlock Text="📄" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Open Map..." 
+                          Command="{Binding OpenMapCommand}"
+                          InputGesture="Ctrl+O">
+                    <MenuItem.Icon>
+                        <TextBlock Text="📂" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Save" 
+                          Command="{Binding SaveCommand}"
+                          InputGesture="Ctrl+S">
+                    <MenuItem.Icon>
+                        <TextBlock Text="💾" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="Save _As..." 
+                          Command="{Binding SaveAsCommand}"
+                          InputGesture="Ctrl+Shift+S">
+                    <MenuItem.Icon>
+                        <TextBlock Text="💾" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="Recent Maps" x:Name="RecentMapsMenu">
+                    <MenuItem.Icon>
+                        <TextBlock Text="📂" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="E_xit" 
+                          Command="{Binding ExitCommand}"
+                          InputGesture="Alt+F4">
+                    <MenuItem.Icon>
+                        <TextBlock Text="❌" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_Edit">
+                <MenuItem Header="_Undo" 
+                          Command="{Binding UndoCommand}"
+                          InputGesture="Ctrl+Z">
+                    <MenuItem.Icon>
+                        <TextBlock Text="↶" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Redo" 
+                          Command="{Binding RedoCommand}"
+                          InputGesture="Ctrl+Y">
+                    <MenuItem.Icon>
+                        <TextBlock Text="↷" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <Separator />
+                <MenuItem Header="_Copy" 
+                          Command="{Binding CopyCommand}"
+                          InputGesture="Ctrl+C">
+                    <MenuItem.Icon>
+                        <TextBlock Text="📋" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+                <MenuItem Header="_Paste" 
+                          Command="{Binding PasteCommand}"
+                          InputGesture="Ctrl+V">
+                    <MenuItem.Icon>
+                        <TextBlock Text="📋" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+            <MenuItem Header="_View">
+                <MenuItem Header="🎨 GRH Tree View" 
+                          Command="{Binding ShowGrhTreeViewCommand}"
+                          InputGesture="Ctrl+1" />
+                <MenuItem Header="⚙️ Properties" 
+                          Command="{Binding ShowPropertiesCommand}"
+                          InputGesture="Ctrl+2" />
+                <MenuItem Header="💾 Database Editor" 
+                          Command="{Binding ShowDatabaseEditorCommand}"
+                          InputGesture="Ctrl+3" />
+            </MenuItem>
+            <MenuItem Header="_Tools">
+                <MenuItem Header="📝 Map Editor" 
+                          Command="{Binding ShowMapEditorCommand}"
+                          InputGesture="Ctrl+M" />
+                <MenuItem Header="🦴 Skeleton Editor" 
+                          Command="{Binding ShowSkeletonEditorCommand}"
+                          InputGesture="Ctrl+K" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="_About NetGore Editor" 
+                          Command="{Binding ShowAboutCommand}"
+                          InputGesture="F1">
+                    <MenuItem.Icon>
+                        <TextBlock Text="ℹ️" FontSize="14" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+
+        <!-- Status Bar (bottom) -->
+        <Border DockPanel.Dock="Bottom" Background="#2D2D30" Padding="5">
+            <DockPanel>
+                <TextBlock DockPanel.Dock="Right"
+                           Text="{Binding StatusBarRight}"
+                           Foreground="Gray"
+                           Margin="10,0,0,0" />
+                <TextBlock DockPanel.Dock="Left"
+                           Text="{Binding StatusBarLeft}" 
+                           Foreground="White" />
+            </DockPanel>
+        </Border>
+
+        <!-- Main Docking Area (replaces WeifenLuo.WinFormsUI.Docking) -->
+        <dock:DockControl x:Name="DockControl" 
+                          Layout="{Binding DockViewModel.Layout}">
+            <!-- Layout is bound to DockViewModel.Layout -->
+            <!-- Panels will appear when you click on tabs! -->
+        </dock:DockControl>
+    </DockPanel>
+</Window>

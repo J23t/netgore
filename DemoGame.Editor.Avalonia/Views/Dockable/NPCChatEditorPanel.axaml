@@ -1,0 +1,171 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.NPCChatEditorPanel"
+             x:DataType="vm:NPCChatEditorViewModel">
+    
+    <Design.DataContext>
+        <vm:NPCChatEditorViewModel />
+    </Design.DataContext>
+
+    <!-- NPC Chat Editor - Edit dialog trees -->
+    <Border Background="#252526">
+        <DockPanel>
+            <!-- Top toolbar -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,0,0,1"
+                    Padding="8">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <Button Content="➕ New Dialog" Command="{Binding NewDialogCommand}" Padding="8,4" />
+                    <Button Content="🗑 Delete Dialog" Command="{Binding DeleteDialogCommand}" Padding="8,4" />
+                    <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                    <Button Content="➕ Add Node" Command="{Binding AddChatNodeCommand}" Padding="8,4" />
+                    <Button Content="🗑 Delete Node" Command="{Binding DeleteChatNodeCommand}" Padding="8,4" />
+                    <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                    <Button Content="💾 Save" Command="{Binding SaveDialogCommand}" Padding="8,4" />
+                </StackPanel>
+            </Border>
+
+            <!-- Bottom status bar -->
+            <Border DockPanel.Dock="Bottom" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,1,0,0"
+                    Padding="8,4">
+                <TextBlock Text="{Binding StatusText}" 
+                           Foreground="#9CDCFE"
+                           FontSize="11" />
+            </Border>
+
+            <!-- Main content -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="250" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Dialog list -->
+                <Border Grid.Column="0" Background="#1E1E1E" Padding="8">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" 
+                                   Text="NPC Dialogs" 
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Margin="0,0,0,8" />
+                        <ListBox ItemsSource="{Binding Dialogs}"
+                                 SelectedItem="{Binding SelectedDialog}"
+                                 Background="#252526">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding}" Foreground="White" />
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </Border>
+
+                <GridSplitter Grid.Column="1" Background="#3F3F46" ResizeDirection="Columns" />
+
+                <!-- Dialog tree -->
+                <Border Grid.Column="2" Background="#1E1E1E" Padding="8">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top"
+                                   Text="Dialog Tree" 
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Margin="0,0,0,8" />
+                        <TreeView ItemsSource="{Binding ChatNodes}"
+                                  SelectedItem="{Binding SelectedNode}"
+                                  Background="#252526">
+                            <TreeView.DataTemplates>
+                                <TreeDataTemplate DataType="vm:ChatNodeItem" ItemsSource="{Binding Children}">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="{Binding Title}" 
+                                                   Foreground="White"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Text}" 
+                                                   Foreground="Gray"
+                                                   FontSize="10"
+                                                   TextWrapping="Wrap"
+                                                   MaxWidth="300" />
+                                    </StackPanel>
+                                </TreeDataTemplate>
+                            </TreeView.DataTemplates>
+                        </TreeView>
+                    </DockPanel>
+                </Border>
+
+                <GridSplitter Grid.Column="3" Background="#3F3F46" ResizeDirection="Columns" />
+
+                <!-- Node properties -->
+                <Border Grid.Column="4" Background="#1E1E1E" Padding="8">
+                    <ScrollViewer>
+                        <StackPanel Spacing="12">
+                            <TextBlock Text="Node Properties" 
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="White" />
+
+                            <StackPanel Spacing="8" IsVisible="{Binding SelectedNode, Converter={x:Static ObjectConverters.IsNotNull}}">
+                                <!-- Node ID -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Node ID" Foreground="Gray" FontSize="11" />
+                                    <TextBox Text="{Binding SelectedNode.NodeId}" IsReadOnly="True" />
+                                </StackPanel>
+
+                                <!-- Title -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Title" Foreground="Gray" FontSize="11" />
+                                    <TextBox Text="{Binding SelectedNode.Title}" />
+                                </StackPanel>
+
+                                <!-- Text -->
+                                <StackPanel Spacing="4">
+                                    <TextBlock Text="Dialog Text" Foreground="Gray" FontSize="11" />
+                                    <TextBox Text="{Binding SelectedNode.Text}" 
+                                             AcceptsReturn="True"
+                                             TextWrapping="Wrap"
+                                             MinHeight="100" />
+                                </StackPanel>
+
+                                <Border Background="#252526" 
+                                        BorderBrush="#3F3F46" 
+                                        BorderThickness="1"
+                                        Padding="8"
+                                        Margin="0,12,0,0">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="💡 Features to add:"
+                                                   Foreground="White"
+                                                   FontSize="11"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Text="• Conditionals"
+                                                   Foreground="Gray"
+                                                   FontSize="10" />
+                                        <TextBlock Text="• Actions"
+                                                   Foreground="Gray"
+                                                   FontSize="10" />
+                                        <TextBlock Text="• Quest requirements"
+                                                   Foreground="Gray"
+                                                   FontSize="10" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+
+                            <TextBlock Text="No node selected"
+                                       Foreground="Gray"
+                                       FontStyle="Italic"
+                                       IsVisible="{Binding SelectedNode, Converter={x:Static ObjectConverters.IsNull}}" />
+                        </StackPanel>
+                    </ScrollViewer>
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

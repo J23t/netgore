@@ -1,0 +1,113 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             mc:Ignorable="d" d:DesignWidth="400" d:DesignHeight="450"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.MusicEditorPanel"
+             x:DataType="vm:MusicEditorViewModel">
+    
+    <Design.DataContext>
+        <vm:MusicEditorViewModel />
+    </Design.DataContext>
+
+    <!-- Main layout: Top area (list + properties), Bottom area (buttons) -->
+    <Grid RowDefinitions="*,Auto">
+        
+        <!-- Top: Split view with music list (left) and properties (right) -->
+        <Grid Grid.Row="0" ColumnDefinitions="200,5,*">
+            
+            <!-- Left: Music List -->
+            <Border Grid.Column="0" BorderBrush="#3F3F46" BorderThickness="0,0,1,0">
+                <Grid>
+                    <ListBox ItemsSource="{Binding MusicItems}"
+                             SelectedItem="{Binding SelectedMusic}"
+                             Background="#1E1E1E"
+                             Foreground="White">
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}" />
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                    
+                    <!-- Show message when list is empty -->
+                    <Border Padding="10" IsVisible="{Binding !MusicItems.Count}">
+                        <StackPanel VerticalAlignment="Center" Spacing="5">
+                            <TextBlock Text="No music files loaded"
+                                       Foreground="Gray"
+                                       FontSize="12"
+                                       TextAlignment="Center" />
+                            <TextBlock Text="(Content files not found)"
+                                       Foreground="Gray"
+                                       FontSize="11"
+                                       FontStyle="Italic"
+                                       TextAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <!-- GridSplitter between list and properties -->
+            <GridSplitter Grid.Column="1" 
+                          Width="5" 
+                          ResizeDirection="Columns"
+                          Background="#3F3F46" />
+
+            <!-- Right: Properties (simple view for now, can add PropertyGrid later) -->
+            <Border Grid.Column="2" Background="#252526" Padding="10">
+                <ScrollViewer>
+                    <StackPanel Spacing="10" IsVisible="{Binding SelectedMusic, Converter={x:Static ObjectConverters.IsNotNull}}">
+                        <TextBlock Text="Music Properties" 
+                                   FontSize="14" 
+                                   FontWeight="Bold"
+                                   Foreground="White" />
+                        
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="ID:" Foreground="#9CDCFE" FontSize="12" />
+                            <TextBlock Text="{Binding SelectedMusic.ID}" 
+                                       Foreground="White" 
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+
+                        <StackPanel Spacing="5">
+                            <TextBlock Text="Name:" Foreground="#9CDCFE" FontSize="12" />
+                            <TextBlock Text="{Binding SelectedMusic.Name}" 
+                                       Foreground="White" 
+                                       Margin="10,0,0,0" />
+                        </StackPanel>
+
+                    </StackPanel>
+                </ScrollViewer>
+            </Border>
+        </Grid>
+
+        <!-- Bottom: Play/Stop buttons -->
+        <Border Grid.Row="1" 
+                Background="#2D2D30" 
+                BorderBrush="#3F3F46" 
+                BorderThickness="0,1,0,0"
+                Padding="10">
+            <StackPanel Orientation="Horizontal" Spacing="10">
+                <Button Command="{Binding PlayMusicCommand}"
+                        Content="▶ Play"
+                        Width="80"
+                        Height="32"
+                        ToolTip.Tip="Play selected music" />
+                
+                <Button Command="{Binding StopMusicCommand}"
+                        Content="■ Stop"
+                        Width="80"
+                        Height="32"
+                        ToolTip.Tip="Stop playing music" />
+
+                <TextBlock Text="{Binding SelectedMusic.Name, StringFormat='Selected: {0}'}"
+                           VerticalAlignment="Center"
+                           Foreground="White"
+                           Margin="20,0,0,0"
+                           IsVisible="{Binding SelectedMusic, Converter={x:Static ObjectConverters.IsNotNull}}" />
+            </StackPanel>
+        </Border>
+    </Grid>
+</UserControl>
+

@@ -1,0 +1,163 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             xmlns:controls="using:DemoGame.Editor.Avalonia.Controls"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.EditMapPanel"
+             x:DataType="vm:EditMapViewModel">
+    
+    <Design.DataContext>
+        <vm:EditMapViewModel />
+    </Design.DataContext>
+
+    <!-- Map Editor - Main map editing interface -->
+    <Border Background="#252526">
+        <DockPanel>
+            <!-- Top toolbar -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,0,0,1"
+                    Padding="8">
+                <DockPanel>
+                    <!-- File operations -->
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="💡 Use File menu for New/Open/Save (Ctrl+N, Ctrl+O, Ctrl+S)" 
+                                   VerticalAlignment="Center"
+                                   Foreground="Gray"
+                                   FontSize="11"
+                                   FontStyle="Italic"
+                                   Margin="0,0,12,0" />
+                        <Button Content="💾 Save Map" Command="{Binding SaveMapCommand}" Padding="8,4" />
+                        <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                        <Button Content="↶ Undo" Command="{Binding UndoCommand}" Padding="8,4" />
+                        <Button Content="↷ Redo" Command="{Binding RedoCommand}" Padding="8,4" />
+                    </StackPanel>
+
+                    <!-- View controls -->
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4">
+                        <Button Content="🔍+" Command="{Binding ZoomInCommand}" Padding="8,4" />
+                        <TextBlock Text="{Binding Zoom, StringFormat='{}{0}%'}" 
+                                   VerticalAlignment="Center"
+                                   Foreground="White"
+                                   MinWidth="50"
+                                   TextAlignment="Center" />
+                        <Button Content="🔍-" Command="{Binding ZoomOutCommand}" Padding="8,4" />
+                        <Button Content="100%" Command="{Binding ResetZoomCommand}" Padding="8,4" />
+                        <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                        <ToggleButton Content="📐 Grid" IsChecked="{Binding ShowGrid}" Padding="8,4" />
+                        <ToggleButton Content="🧱 Walls" IsChecked="{Binding ShowWalls}" Padding="8,4" />
+                        <ToggleButton Content="👤 Entities" IsChecked="{Binding ShowEntities}" Padding="8,4" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Second toolbar: Tools & Layers -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,0,0,1"
+                    Padding="8">
+                <DockPanel>
+                    <!-- Tools -->
+                    <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="Tool:" 
+                                   VerticalAlignment="Center"
+                                   Foreground="White"
+                                   Margin="0,0,8,0" />
+                        <ComboBox ItemsSource="{Binding AvailableTools}"
+                                  SelectedItem="{Binding CurrentTool}"
+                                  Width="150" />
+                    </StackPanel>
+
+                    <!-- Layers -->
+                    <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="4">
+                        <TextBlock Text="Layer:" 
+                                   VerticalAlignment="Center"
+                                   Foreground="White"
+                                   Margin="0,0,8,0" />
+                        <ComboBox ItemsSource="{Binding AvailableLayers}"
+                                  SelectedItem="{Binding CurrentLayer}"
+                                  Width="150" />
+                        <Button Content="🗑 Clear Layer" Command="{Binding ClearLayerCommand}" Padding="8,4" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Bottom status bar -->
+            <Border DockPanel.Dock="Bottom" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,1,0,0"
+                    Padding="8,4">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left"
+                               Text="{Binding StatusText}" 
+                               Foreground="#9CDCFE"
+                               FontSize="11" />
+                    <StackPanel DockPanel.Dock="Right" 
+                                Orientation="Horizontal" 
+                                Spacing="12"
+                                HorizontalAlignment="Right">
+                        <TextBlock Text="{Binding MapName, StringFormat='Map: {0}'}" 
+                                   Foreground="Gray"
+                                   FontSize="11" />
+                        <TextBlock Text="{Binding MapWidth, StringFormat='W: {0}'}" 
+                                   Foreground="Gray"
+                                   FontSize="11" />
+                        <TextBlock Text="{Binding MapHeight, StringFormat='H: {0}'}" 
+                                   Foreground="Gray"
+                                   FontSize="11" />
+                        <TextBlock Text="{Binding MouseX, StringFormat='X: {0}'}" 
+                                   Foreground="Gray"
+                                   FontSize="11" />
+                        <TextBlock Text="{Binding MouseY, StringFormat='Y: {0}'}" 
+                                   Foreground="Gray"
+                                   FontSize="11" />
+                    </StackPanel>
+                </DockPanel>
+            </Border>
+
+            <!-- Main content: SFML Map canvas that fills available space -->
+            <Border x:Name="MapContainer" Background="#1E1E1E" ClipToBounds="True">
+                <Grid ClipToBounds="True">
+                    <!-- SFML control - binds to parent size -->
+                    <controls:SfmlRenderControl x:Name="SfmlControl"
+                                                Width="{Binding #MapContainer.Bounds.Width}"
+                                                Height="{Binding #MapContainer.Bounds.Height}"
+                                                ClipToBounds="True" />
+
+                    <!-- Info overlay (non-interactive) -->
+                    <Border HorizontalAlignment="Center" 
+                            VerticalAlignment="Top"
+                            Background="#252526E0"
+                            Padding="15"
+                            Margin="20"
+                            CornerRadius="4"
+                            IsHitTestVisible="False">
+                        <StackPanel Spacing="6">
+                            <TextBlock Text="🗺️ SFML Map Editor" 
+                                       FontSize="14"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="{Binding MapName, StringFormat='Map: {0}'}"
+                                       Foreground="#9CDCFE"
+                                       FontSize="11"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="✅ SFML Rendering Active!"
+                                       Foreground="LightGreen"
+                                       FontSize="11"
+                                       FontWeight="Bold"
+                                       HorizontalAlignment="Center" />
+                            <TextBlock Text="Grid = SFML @ 60 FPS • Resizes with panel"
+                                       Foreground="Gray"
+                                       FontStyle="Italic"
+                                       FontSize="9"
+                                       HorizontalAlignment="Center" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+        </DockPanel>
+    </Border>
+</UserControl>

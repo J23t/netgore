@@ -1,0 +1,63 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.WindowsDesktop">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>WinExe</OutputType>
+    <AssemblyName>DemoGame.Editor</AssemblyName>
+    <RootNamespace>DemoGame.Editor</RootNamespace>
+    <OutputPath>../DemoGame.Client/bin/</OutputPath>
+    <UseWindowsForms>true</UseWindowsForms>
+    <LangVersion>latest</LangVersion>
+    <Nullable>disable</Nullable>
+    <ImplicitUsings>disable</ImplicitUsings>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'">
+    <DefineConstants>TRACE;DEBUG;TOPDOWN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="Lidgren.Network">
+      <HintPath>../Externals/Lidgren.Network.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="log4net">
+      <HintPath>../Externals/log4net.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>../Externals/WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Drawing.Common" Version="8.0.0" />
+    <PackageReference Include="System.Resources.Extensions" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../DemoGame.Client/DemoGame.Client.csproj" />
+    <ProjectReference Include="../DemoGame.Server/DemoGame.Server.csproj" />
+    <ProjectReference Include="../DemoGame/DemoGame.csproj" />
+    <ProjectReference Include="../NetGore.Db/NetGore.Db.csproj" />
+    <ProjectReference Include="../NetGore.Editor/NetGore.Editor.csproj" />
+    <ProjectReference Include="../NetGore.Features.Client/NetGore.Features.Client.csproj" />
+    <ProjectReference Include="../NetGore.Features.Editor/NetGore.Features.Editor.csproj" />
+    <ProjectReference Include="../NetGore.Features.Server/NetGore.Features.Server.csproj" />
+    <ProjectReference Include="../NetGore.Features/NetGore.Features.csproj" />
+    <ProjectReference Include="../NetGore/NetGore.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Settings\EditorToolStates.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="**/*.resx" Exclude="bin/**;obj/**" />
+  </ItemGroup>
+
+</Project>

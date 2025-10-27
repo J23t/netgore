@@ -1,0 +1,96 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="DemoGame.Editor.Avalonia.Views.AboutDialog"
+        Title="About NetGore Editor"
+        Width="500" Height="400"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Icon="/Assets/avalonia-logo.ico">
+    
+    <Border Background="#252526" Padding="30">
+        <StackPanel Spacing="20">
+            <!-- Logo/Title -->
+            <StackPanel Spacing="10" HorizontalAlignment="Center">
+                <TextBlock Text="🎮" 
+                           FontSize="64"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="NetGore Editor" 
+                           FontSize="28" 
+                           FontWeight="Bold"
+                           Foreground="White"
+                           HorizontalAlignment="Center" />
+                <TextBlock Text="Avalonia Edition" 
+                           FontSize="16"
+                           Foreground="#9CDCFE"
+                           HorizontalAlignment="Center" />
+            </StackPanel>
+
+            <!-- Version Info -->
+            <Border Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="1"
+                    Padding="15">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Version Information" 
+                               FontWeight="Bold"
+                               Foreground="White" />
+                    <TextBlock Text="Version: 1.0.0-avalonia-preview" 
+                               Foreground="Gray" />
+                    <TextBlock Text="Build Date: October 27, 2025" 
+                               Foreground="Gray" />
+                    <TextBlock Text="Framework: .NET 8.0 + Avalonia UI 11" 
+                               Foreground="Gray" />
+                </StackPanel>
+            </Border>
+
+            <!-- Description -->
+            <Border Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="1"
+                    Padding="15">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="About" 
+                               FontWeight="Bold"
+                               Foreground="White" />
+                    <TextBlock TextWrapping="Wrap" 
+                               Foreground="Gray">
+                        NetGore Editor is a cross-platform game development tool for creating 2D multiplayer games. 
+                        This Avalonia edition runs natively on Linux, Windows, and macOS.
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- Credits -->
+            <Border Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="1"
+                    Padding="15">
+                <StackPanel Spacing="8">
+                    <TextBlock Text="Technologies" 
+                               FontWeight="Bold"
+                               Foreground="White" />
+                    <TextBlock Foreground="Gray">
+                        • Avalonia UI - Cross-platform XAML framework
+                    </TextBlock>
+                    <TextBlock Foreground="Gray">
+                        • Dock.Avalonia - Docking layout system
+                    </TextBlock>
+                    <TextBlock Foreground="Gray">
+                        • SFML.Net - Graphics and audio
+                    </TextBlock>
+                    <TextBlock Foreground="Gray">
+                        • CommunityToolkit.Mvvm - MVVM helpers
+                    </TextBlock>
+                </StackPanel>
+            </Border>
+
+            <!-- Close Button -->
+            <Button Content="Close" 
+                    HorizontalAlignment="Center"
+                    MinWidth="100"
+                    Click="Close_Click"
+                    Padding="15,8" />
+        </StackPanel>
+    </Border>
+</Window>
+

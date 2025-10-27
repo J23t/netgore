@@ -1,0 +1,121 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.DbEditorPanel"
+             x:DataType="vm:DbEditorViewModel">
+    
+    <Design.DataContext>
+        <vm:DbEditorViewModel />
+    </Design.DataContext>
+
+    <!-- Database Editor - Edit game database tables -->
+    <Border Background="#252526">
+        <DockPanel>
+            <!-- Top toolbar -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,0,0,1"
+                    Padding="8">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <Button Content="➕ New Record" Command="{Binding NewRecordCommand}" Padding="8,4" />
+                    <Button Content="🗑 Delete Record" Command="{Binding DeleteRecordCommand}" Padding="8,4" />
+                    <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                    <Button Content="💾 Save Changes" Command="{Binding SaveChangesCommand}" Padding="8,4" />
+                    <Button Content="🔄 Refresh" Command="{Binding RefreshTableCommand}" Padding="8,4" />
+                    <Button Content="📤 Export" Command="{Binding ExportTableCommand}" Padding="8,4" />
+                </StackPanel>
+            </Border>
+
+            <!-- Bottom status bar -->
+            <Border DockPanel.Dock="Bottom" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,1,0,0"
+                    Padding="8,4">
+                <TextBlock Text="{Binding StatusText}" 
+                           Foreground="#9CDCFE"
+                           FontSize="11" />
+            </Border>
+
+            <!-- Main content -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Table list -->
+                <Border Grid.Column="0" Background="#1E1E1E" Padding="8">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top" 
+                                   Text="Database Tables" 
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Margin="0,0,0,8" />
+                        <ListBox ItemsSource="{Binding Tables}"
+                                 SelectedItem="{Binding SelectedTable}"
+                                 Background="#252526">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="{Binding TableName}" 
+                                                   Foreground="White"
+                                                   FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Description}" 
+                                                   Foreground="Gray"
+                                                   FontSize="10" />
+                                        <TextBlock Text="{Binding RecordCount, StringFormat='{}{0} records'}" 
+                                                   Foreground="#9CDCFE"
+                                                   FontSize="9" />
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </Border>
+
+                <GridSplitter Grid.Column="1" Background="#3F3F46" ResizeDirection="Columns" />
+
+                <!-- Data grid -->
+                <Border Grid.Column="2" Background="#1E1E1E" Padding="8">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+                            <TextBlock Text="{Binding SelectedTable.TableName, StringFormat='Table: {0}'}" 
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="White" />
+                            <TextBlock Text="{Binding TotalRecords, StringFormat='Total Records: {0}'}" 
+                                       FontSize="11"
+                                       Foreground="Gray" />
+                        </StackPanel>
+
+                        <DataGrid ItemsSource="{Binding TableRows}"
+                                  SelectedItem="{Binding SelectedRow}"
+                                  AutoGenerateColumns="True"
+                                  CanUserReorderColumns="True"
+                                  CanUserResizeColumns="True"
+                                  CanUserSortColumns="True"
+                                  GridLinesVisibility="All"
+                                  BorderThickness="1"
+                                  BorderBrush="#3F3F46"
+                                  Background="#252526"
+                                  IsReadOnly="False">
+                            <DataGrid.Styles>
+                                <Style Selector="DataGridCell">
+                                    <Setter Property="Foreground" Value="White" />
+                                </Style>
+                                <Style Selector="DataGridColumnHeader">
+                                    <Setter Property="Foreground" Value="White" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Style>
+                            </DataGrid.Styles>
+                        </DataGrid>
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

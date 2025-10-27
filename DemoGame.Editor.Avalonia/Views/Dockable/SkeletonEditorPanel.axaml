@@ -1,0 +1,226 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:DemoGame.Editor.Avalonia.ViewModels.Dockable"
+             xmlns:controls="using:DemoGame.Editor.Avalonia.Controls"
+             x:Class="DemoGame.Editor.Avalonia.Views.Dockable.SkeletonEditorPanel"
+             x:DataType="vm:SkeletonEditorViewModel">
+    
+    <Design.DataContext>
+        <vm:SkeletonEditorViewModel />
+    </Design.DataContext>
+
+    <!-- Skeleton Editor - Character animation editor -->
+    <Border Background="#252526">
+        <DockPanel>
+            <!-- Top toolbar -->
+            <Border DockPanel.Dock="Top" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,0,0,1"
+                    Padding="8">
+                <StackPanel Orientation="Horizontal" Spacing="4">
+                    <Button Content="➕ New Skeleton" Command="{Binding NewSkeletonCommand}" Padding="8,4" />
+                    <Button Content="🗑 Delete" Command="{Binding DeleteSkeletonCommand}" Padding="8,4" />
+                    <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                    <Button Content="➕ Add Node" Command="{Binding AddNodeCommand}" Padding="8,4" />
+                    <Button Content="➕ Add Animation" Command="{Binding AddAnimationCommand}" Padding="8,4" />
+                    <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                    <Button Content="▶ Play" Command="{Binding PlayAnimationCommand}" Padding="8,4" />
+                    <Button Content="■ Stop" Command="{Binding StopAnimationCommand}" Padding="8,4" />
+                    <Separator Width="1" Background="#3F3F46" Margin="4,0" />
+                    <Button Content="💾 Save" Command="{Binding SaveSkeletonCommand}" Padding="8,4" />
+                </StackPanel>
+            </Border>
+
+            <!-- Bottom status bar -->
+            <Border DockPanel.Dock="Bottom" 
+                    Background="#1E1E1E" 
+                    BorderBrush="#3F3F46" 
+                    BorderThickness="0,1,0,0"
+                    Padding="8,4">
+                <DockPanel>
+                    <TextBlock DockPanel.Dock="Left"
+                               Text="{Binding StatusText}" 
+                               Foreground="#9CDCFE"
+                               FontSize="11" />
+                    <TextBlock DockPanel.Dock="Right"
+                               Text="{Binding CurrentFrame, StringFormat='Frame: {0} / '}"
+                               Foreground="Gray"
+                               FontSize="11"
+                               HorizontalAlignment="Right" />
+                </DockPanel>
+            </Border>
+
+            <!-- Main content -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="200" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="4" />
+                    <ColumnDefinition Width="250" />
+                </Grid.ColumnDefinitions>
+
+                <!-- Left panel: Skeletons & Animations -->
+                <Border Grid.Column="0" Background="#1E1E1E" Padding="8">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="*" />
+                            <RowDefinition Height="4" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <!-- Skeletons list -->
+                        <DockPanel Grid.Row="0">
+                            <TextBlock DockPanel.Dock="Top" 
+                                       Text="Skeletons" 
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Margin="0,0,0,8" />
+                            <ListBox ItemsSource="{Binding Skeletons}"
+                                     SelectedItem="{Binding SelectedSkeleton}"
+                                     Background="#252526">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding Name}" Foreground="White" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+
+                        <GridSplitter Grid.Row="1" Background="#3F3F46" ResizeDirection="Rows" />
+
+                        <!-- Animations list -->
+                        <DockPanel Grid.Row="2">
+                            <TextBlock DockPanel.Dock="Top" 
+                                       Text="Animations" 
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="White"
+                                       Margin="0,0,0,8" />
+                            <ListBox ItemsSource="{Binding Animations}"
+                                     SelectedItem="{Binding SelectedAnimation}"
+                                     Background="#252526">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="{Binding}" Foreground="White" />
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                    </Grid>
+                </Border>
+
+                <GridSplitter Grid.Column="1" Background="#3F3F46" ResizeDirection="Columns" />
+
+                <!-- Center: Preview with SFML -->
+                <Border Grid.Column="2" Background="#1E1E1E" Padding="8">
+                    <DockPanel>
+                        <TextBlock DockPanel.Dock="Top"
+                                   Text="Skeleton Preview" 
+                                   FontSize="12"
+                                   FontWeight="Bold"
+                                   Foreground="White"
+                                   Margin="0,0,0,8" />
+                        
+                        <!-- SFML rendering area -->
+                        <Border x:Name="SkeletonPreviewContainer"
+                                Background="#252526" 
+                                BorderBrush="#3F3F46" 
+                                BorderThickness="1"
+                                ClipToBounds="True">
+                            <Grid ClipToBounds="True">
+                                <!-- SFML preview control -->
+                                <controls:SfmlRenderControl x:Name="SkeletonSfmlControl"
+                                                            Width="{Binding #SkeletonPreviewContainer.Bounds.Width}"
+                                                            Height="{Binding #SkeletonPreviewContainer.Bounds.Height}"
+                                                            ClipToBounds="True" />
+                                
+                                <!-- Info overlay -->
+                                <Border HorizontalAlignment="Center" 
+                                        VerticalAlignment="Top"
+                                        Background="#252526E0"
+                                        Padding="12"
+                                        Margin="10"
+                                        CornerRadius="4"
+                                        IsHitTestVisible="False">
+                                    <StackPanel Spacing="4">
+                                        <TextBlock Text="🦴 Skeleton Preview" 
+                                                   Foreground="White"
+                                                   FontSize="11"
+                                                   FontWeight="Bold"
+                                                   HorizontalAlignment="Center" />
+                                        <TextBlock Text="{Binding SelectedSkeleton.Name, StringFormat='Skeleton: {0}'}"
+                                                   Foreground="#9CDCFE"
+                                                   FontSize="10"
+                                                   HorizontalAlignment="Center"
+                                                   IsVisible="{Binding SelectedSkeleton, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                        <TextBlock Text="{Binding SelectedAnimation.Name, StringFormat='Animation: {0}'}"
+                                                   Foreground="#9CDCFE"
+                                                   FontSize="10"
+                                                   HorizontalAlignment="Center"
+                                                   IsVisible="{Binding SelectedAnimation, Converter={x:Static ObjectConverters.IsNotNull}}" />
+                                        <TextBlock Text="✅ SFML Active"
+                                                   Foreground="LightGreen"
+                                                   FontSize="9"
+                                                   HorizontalAlignment="Center" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                        </Border>
+                    </DockPanel>
+                </Border>
+
+                <GridSplitter Grid.Column="3" Background="#3F3F46" ResizeDirection="Columns" />
+
+                <!-- Right panel: Nodes -->
+                <Border Grid.Column="4" Background="#1E1E1E" Padding="8">
+                    <DockPanel>
+                        <StackPanel DockPanel.Dock="Top" Spacing="8" Margin="0,0,0,8">
+                            <TextBlock Text="Skeleton Nodes" 
+                                       FontSize="12"
+                                       FontWeight="Bold"
+                                       Foreground="White" />
+                            <StackPanel Orientation="Horizontal" Spacing="4">
+                                <Button Content="➕" Command="{Binding AddNodeCommand}" Width="30" />
+                                <Button Content="🗑" Command="{Binding DeleteNodeCommand}" Width="30" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <ListBox ItemsSource="{Binding Nodes}"
+                                 SelectedItem="{Binding SelectedNode}"
+                                 Background="#252526">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Spacing="2">
+                                        <TextBlock Text="{Binding Name}" 
+                                                   Foreground="White"
+                                                   FontWeight="Bold" />
+                                        <StackPanel Orientation="Horizontal" Spacing="4">
+                                            <TextBlock Text="("
+                                                       Foreground="Gray"
+                                                       FontSize="10" />
+                                            <TextBlock Text="{Binding X}" 
+                                                       Foreground="Gray"
+                                                       FontSize="10" />
+                                            <TextBlock Text=", "
+                                                       Foreground="Gray"
+                                                       FontSize="10" />
+                                            <TextBlock Text="{Binding Y}" 
+                                                       Foreground="Gray"
+                                                       FontSize="10" />
+                                            <TextBlock Text=")"
+                                                       Foreground="Gray"
+                                                       FontSize="10" />
+                                        </StackPanel>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </DockPanel>
+                </Border>
+            </Grid>
+        </DockPanel>
+    </Border>
+</UserControl>

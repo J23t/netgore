@@ -1,0 +1,68 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:dockable="using:DemoGame.Editor.Avalonia.Views.Dockable"
+        x:Class="DemoGame.Editor.Avalonia.Views.MainWindow_Simple"
+        Title="NetGore Editor (Avalonia) - SIMPLIFIED TEST"
+        Width="1200" Height="800"
+        Background="#1E1E1E">
+
+    <!-- SIMPLIFIED VERSION - Just TabControl to test if panels work -->
+    <DockPanel>
+        <!-- Menu Bar -->
+        <Menu DockPanel.Dock="Top" Background="#2D2D30">
+            <MenuItem Header="_File" Foreground="White">
+                <MenuItem Header="_Exit" />
+            </MenuItem>
+            <MenuItem Header="_View" Foreground="White">
+                <MenuItem Header="Test Panels" />
+            </MenuItem>
+        </Menu>
+
+        <!-- Status Bar -->
+        <Border DockPanel.Dock="Bottom" Background="#2D2D30" Padding="5">
+            <TextBlock Text="✅ SIMPLIFIED VIEW - Testing migrated panels without docking" 
+                       Foreground="White" />
+        </Border>
+
+        <!-- Simple TabControl instead of DockControl (to test if panels work) -->
+        <TabControl Background="#252526" Foreground="White">
+            <TabItem Header="🎵 Music Editor">
+                <dockable:MusicEditorPanel />
+            </TabItem>
+            
+            <TabItem Header="🔊 Sound Editor">
+                <dockable:SoundEditorPanel />
+            </TabItem>
+            
+            <TabItem Header="👤 Body Editor">
+                <dockable:BodyEditorPanel />
+            </TabItem>
+            
+            <TabItem Header="📦 Selected Objects">
+                <dockable:SelectedMapObjectsPanel />
+            </TabItem>
+            
+            <TabItem Header="ℹ️ About">
+                <Border Padding="20">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="NetGore Editor - Avalonia Version" 
+                                   FontSize="20" 
+                                   FontWeight="Bold"
+                                   Foreground="White" />
+                        <TextBlock Text="✅ 4 forms successfully migrated from WinForms!" 
+                                   FontSize="14"
+                                   Foreground="#9CDCFE" />
+                        <TextBlock Text="This simplified view proves the panels work."
+                                   TextWrapping="Wrap"
+                                   Foreground="White" />
+                        <TextBlock Text="Full docking will be enabled once we verify panels load correctly."
+                                   TextWrapping="Wrap"
+                                   Foreground="Gray"
+                                   Margin="0,10,0,0" />
+                    </StackPanel>
+                </Border>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+</Window>
+
